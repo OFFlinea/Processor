@@ -1,0 +1,9 @@
+push 30
+pop rax
+push rax
+push rax
+add
+push 2
+mul
+out
+hlt
