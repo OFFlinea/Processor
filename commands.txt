@@ -1,0 +1,104 @@
+COMMAND(hlt, -1, NONE, {
+
+    printf("Программа завершена.\n");
+})
+
+COMMAND(out, 0, NONE, {
+
+    Elem_t number = 0;
+    StackPop(&spu->stk, &number);
+    printf("Ответ: %lf\n", (double) number / MOVE_POINT_COEF);
+})
+
+COMMAND(in, 1, NONE, {
+
+    Elem_t number = 0;
+    printf("Введите число: ");
+    scanf("%d", &number);
+    number *= MOVE_POINT_COEF;
+    StackPush(&spu->stk, number);
+})
+
+COMMAND(push, 2, is_number, {
+
+    Elem_t number = spu->cs[spu->ip++];
+
+    number *= MOVE_POINT_COEF;
+    StackPush(&spu->stk, number);
+})
+
+COMMAND(push, 2, is_register, {
+
+    Elem_t number = spu->registers[spu->cs[spu->ip++]];
+
+    number *= MOVE_POINT_COEF;
+    StackPush(&spu->stk, number);
+})
+
+COMMAND(pop,  3, NONE,      {
+
+    StackPop(&spu->stk, &spu->registers[spu->cs[spu->ip]]);
+    spu->registers[spu->cs[spu->ip++]] /= 100;
+})
+
+COMMAND(add, 4, NONE,       {
+
+    Elem_t number1 = 0;
+    Elem_t number2 = 0;
+
+    StackPop(&spu->stk, &number2);
+    StackPop(&spu->stk, &number1);
+    StackPush(&spu->stk, number1 + number2);
+})
+
+COMMAND(sub, 5, NONE,       {
+
+    Elem_t number1 = 0;
+    Elem_t number2 = 0;
+
+    StackPop(&spu->stk, &number2);
+    StackPop(&spu->stk, &number1);
+    StackPush(&spu->stk, number1 - number2);
+})
+
+COMMAND(mul, 6, NONE,       {
+
+    Elem_t number1 = 0;
+    Elem_t number2 = 0;
+
+    StackPop(&spu->stk, &number2);
+    StackPop(&spu->stk, &number1);
+    StackPush(&spu->stk, number1 * number2 / MOVE_POINT_COEF);
+})
+
+COMMAND(div, 7, NONE,       {
+
+    Elem_t number1 = 0;
+    Elem_t number2 = 0;
+
+    StackPop(&spu->stk, &number2);
+    StackPop(&spu->stk, &number1);
+    StackPush(&spu->stk, (Elem_t) ((double) number1 / (double) number2 * MOVE_POINT_COEF));
+})
+
+COMMAND(sqrt, 8, NONE,      {
+
+    Elem_t number = 0;
+    StackPop(&spu->stk, &number);
+    StackPush(&spu->stk, (Elem_t) (sqrt((double) number / MOVE_POINT_COEF) * MOVE_POINT_COEF));
+})
+
+
+COMMAND(sin, 9, NONE,       {
+
+    Elem_t number = 0;
+    StackPop(&spu->stk, &number);
+    StackPush(&spu->stk, (Elem_t) (sin((double) number / MOVE_POINT_COEF) * MOVE_POINT_COEF));
+})
+
+COMMAND(cos, 10, NONE,      {
+
+    Elem_t number = 0;
+    StackPop(&spu->stk, &number);
+    StackPush(&spu->stk, (Elem_t) (cos((double) number / MOVE_POINT_COEF) * MOVE_POINT_COEF));
+})

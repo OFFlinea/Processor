@@ -17,17 +17,12 @@ enum commands
     COS
 };
 
-/*#define DEF_CMD(name, code) CMD_##name = code,
-
-enum commands {
-    #include "cmd.h"
-};
-
-#undef DEF_CMD*/
 
 const size_t nregisters = 4;
 
 const int is_register = 64;
 const int is_number = 32;
+
+const int NONE = 0;
 
 #endif

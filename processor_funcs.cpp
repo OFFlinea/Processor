@@ -14,6 +14,14 @@ void read_operations(struct SPU* spu) {
 
     enum commands command = (enum commands) spu->cs[spu->ip++];
 
+    #define COMMAND(name, number, arg_type, action)     \
+                                                        \
+            case number + arg_type:                     \
+            {                                           \
+                action;                                 \
+                break;                                  \
+            }                                           \
+
     while (command != HLT) {
 
         if (SPUVerify(spu)) {
@@ -25,7 +33,9 @@ void read_operations(struct SPU* spu) {
 
         switch(command) {
 
-            case HLT:
+            #include "commands.txt"
+
+            /*case HLT:
             {
                 Hlt();
                 return;
@@ -101,7 +111,7 @@ void read_operations(struct SPU* spu) {
             {
                 CoS(&spu->stk);
                 break;
-            }
+            }*/
 
             default:
             {
@@ -112,10 +122,12 @@ void read_operations(struct SPU* spu) {
 
         command = (enum commands) spu->cs[spu->ip++];
     }
+
+    #undef COMMAND
 }
 
 
-void Hlt() {
+/*void Hlt() {
 
     printf("Программа завершена.\n");
 }
@@ -221,4 +233,4 @@ void CoS(struct Stack* stk) {
     Elem_t number = 0;
     StackPop(stk, &number);
     StackPush(stk, (Elem_t) (cos((double) number / MOVE_POINT_COEF) * MOVE_POINT_COEF));
-}
+}*/

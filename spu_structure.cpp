@@ -11,9 +11,17 @@
 
 void SPUCtor(struct SPU* spu) {
 
+    assert(spu);
+
     STACK_CTOR(&spu->stk);
 
     spu->registers = (Elem_t*) calloc(nregisters, sizeof(Elem_t));
+
+    if (!spu->registers) {
+
+        printf("No memory\n");
+        return;
+    }
 
     spu->ip = 0;
 
@@ -22,6 +30,10 @@ void SPUCtor(struct SPU* spu) {
 
 
 void SPUDtor(struct SPU* spu) {
+
+    assert(spu);
+    assert(spu->registers);
+    assert(spu->cs);
 
     StackDtor(&spu->stk);
 
@@ -84,7 +96,7 @@ enum error file_read(struct SPU* spu) {
 
     const char* filename = "Operations.txt";
 
-    FILE* file = fopen(filename, "r");
+    FILE* file = fopen(filename, "rb");
 
     size_t fsize = filesize(filename) / sizeof(Elem_t) + 1;
 
